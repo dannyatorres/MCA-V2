@@ -1,0 +1,1224 @@
+/* MCA Command Center Styles */
+
+/* ==========================================================================
+   [MODULE: CORE]
+   Resets, Variables, Color Definitions, Z-Indices
+   ========================================================================== */
+
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --primary-green: #22c55e;
+    --dark-green: #16a34a;
+    --light-green: #dcfce7;
+    --red: #ef4444;
+    --orange: #f59e0b;
+    --blue: #3b82f6;
+    --purple: #8b5cf6;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-300: #d1d5db;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-600: #4b5563;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --white: #ffffff;
+    --black: #000000;
+
+    --border-radius: 8px;
+    --border-radius-lg: 12px;
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+
+    --header-height: 60px;
+    --status-bar-height: 32px;
+    --sidebar-width: 280px;  /* Left panel: ~20% */
+    --panel-width: 50vw;     /* Right panel: 50% of viewport width */
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background-color: var(--gray-50);
+    color: var(--gray-900);
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   [MODULE: LAYOUT]
+   Main Grid, Header Structure, Panel Widths (Flexbox props)
+   ========================================================================== */
+
+/* Command Center Layout */
+.command-center {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 100%;
+}
+
+/* Header */
+.header {
+    height: var(--header-height);
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: var(--shadow-sm);
+    z-index: 50;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.connection-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.status-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.status-dot.connected {
+    background-color: var(--primary-green);
+    box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+    animation: connected-pulse 3s ease-in-out infinite;
+}
+
+@keyframes connected-pulse {
+    0%, 100% {
+        box-shadow: 0 0 12px rgba(34, 197, 94, 0.6);
+    }
+    50% {
+        box-shadow: 0 0 16px rgba(34, 197, 94, 0.8);
+    }
+}
+
+.status-dot.disconnected {
+    background-color: var(--red);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.status-dot.disconnected:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.status-dot.error {
+    background-color: var(--red);
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
+}
+
+.status-dot.error:hover {
+    background-color: #dc2626;
+    transform: scale(1.05);
+}
+
+.status-dot.connecting, .status-dot.reconnecting {
+    background-color: var(--orange);
+    animation: connecting-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes connecting-pulse {
+    0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+}
+
+.status-text {
+    display: none;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.stats-summary {
+    display: flex;
+    gap: 16px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.stat-value {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.refresh-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.refresh-btn:hover {
+    background: var(--gray-200);
+}
+
+.refresh-icon {
+    font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    width: 100%;
+}
+
+/* Panel Base Styles */
+.left-panel,
+.center-panel,
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+}
+
+.left-panel {
+    flex: 3 1 280px;
+    min-width: 260px;
+}
+
+.center-panel {
+    flex: 3 1 400px;
+    min-width: 350px;
+}
+
+.right-panel {
+    flex: 3 0 450px;
+    border-right: none;
+    min-width: 450px;
+    max-width: 700px;
+    height: calc(100vh - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.panel-header {
+    padding: 8px 16px;  /* Reduced from 16px 20px */
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    flex-shrink: 0;
+}
+
+/* Removed old conflicting panel-title rule */
+
+.panel-header h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin: 0;
+}
+
+/* Panel Title Layout */
+.panel-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+}
+
+.title-text h2 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+/* Compact Toolbar Buttons */
+.panel-toolbar {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.toolbar-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 6px;
+    border: 1px solid transparent;
+    background: var(--gray-100);
+    color: var(--gray-600);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.toolbar-btn:hover {
+    background: var(--gray-200);
+    color: var(--gray-800);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.toolbar-btn.primary {
+    background: var(--primary-green);
+    color: white;
+    border-color: var(--dark-green);
+}
+
+.toolbar-btn.primary:hover {
+    background: var(--dark-green);
+    color: white;
+}
+
+.toolbar-btn.secondary {
+    background: var(--blue);
+    color: white;
+    border-color: #2563eb;
+}
+
+.toolbar-btn.secondary:hover {
+    background: #2563eb;
+    color: white;
+}
+
+.toolbar-btn.tertiary {
+    background: var(--orange);
+    color: white;
+    border-color: #d97706;
+}
+
+.toolbar-btn.tertiary:hover {
+    background: #d97706;
+    color: white;
+}
+
+/* Responsive toolbar */
+@media (max-width: 768px) {
+    .panel-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .toolbar-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+    }
+}
+
+/* Form Styles */
+.required {
+    color: var(--error-color);
+    font-weight: 500;
+}
+
+.form-input:invalid {
+    border-color: var(--error-color);
+}
+
+.form-input:focus:invalid {
+    outline-color: var(--error-color);
+    box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.1);
+}
+
+.panel-controls {
+    display: flex;
+    gap: 4px;
+    flex-wrap: nowrap;
+    margin-bottom: 2px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.filter-select,
+.search-input,
+.state-select {
+    padding: 1px 4px;
+    border: 1px solid #d1d5db;
+    border-radius: 2px;
+    font-size: 11px;
+    background: var(--white);
+    height: 22px;
+    box-sizing: border-box;
+}
+
+.search-input {
+    width: 100px;
+    font-size: 11px;
+}
+
+.filter-select,
+.state-select {
+    min-width: 80px;
+    font-size: 11px;
+}
+
+/* ==========================================================================
+   [MODULE: LEFT PANEL / CONVERSATIONS]
+   Consolidated "iPhone Style" list with search and filters.
+   ========================================================================== */
+
+/* 1. Panel Container */
+.left-panel {
+    flex: 3 1 280px;
+    min-width: 260px;
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ensure full height */
+}
+
+/* 2. Header & Controls (Compact Mobile Style) */
+.left-panel .panel-header {
+    padding: 8px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    flex-shrink: 0;
+}
+
+.left-panel .panel-actions {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+}
+
+.left-panel .panel-controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+/* Compact Inputs for Header */
+.left-panel .state-filter {
+    height: 28px;
+    font-size: 12px;
+    padding: 0 8px;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    background: var(--white);
+    color: var(--gray-700);
+    flex-shrink: 0;
+}
+
+.left-panel .search-field {
+    height: 28px;
+    font-size: 12px;
+    padding: 0 8px;
+    border: 1px solid var(--gray-300);
+    border-radius: 4px;
+    width: 100%; /* Fills remaining space */
+}
+
+/* 3. The Conversations List */
+.conversations-list {
+    flex: 1;
+    overflow-y: auto;
+    background: var(--white);
+    /* Remove scrollbar visual but keep function */
+    scrollbar-width: none;
+}
+.conversations-list::-webkit-scrollbar {
+    display: none;
+}
+
+/* 4. Conversation Item (iPhone Style) */
+.conversation-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f3f4f6;
+    background: var(--white);
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    min-height: 60px;
+}
+
+.conversation-item:hover {
+    background: var(--gray-50);
+}
+
+.conversation-item.active {
+    background: #e8f4fd; /* Light Blue Background */
+    border-left: 3px solid #007aff; /* Apple Blue Indicator */
+}
+
+/* 5. Avatars & Content */
+.conversation-avatar {
+    flex-shrink: 0;
+}
+
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #0ea5e9; /* Default Blue */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.conversation-content {
+    flex: 1;
+    min-width: 0; /* Required for text-overflow to work */
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* 6. Text Details */
+.conversation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.business-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gray-900);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+.conversation-time {
+    font-size: 10px;
+    color: #8e8e93;
+}
+
+.conversation-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.phone-number {
+    font-size: 12px;
+    color: #8e8e93;
+}
+
+/* 7. Badges (States) */
+.state-badge {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: var(--gray-100);
+    color: var(--gray-600);
+}
+
+/* State Colors */
+.state-badge.INTERESTED  { background: #dbeafe; color: #1e40af; } /* Blue */
+.state-badge.QUALIFIED   { background: #dcfce7; color: #166534; } /* Green */
+.state-badge.FCS_RUNNING { background: #fef3c7; color: #92400e; } /* Orange */
+.state-badge.NEW         { background: var(--gray-200); color: var(--gray-700); }
+
+/* 8. Unread Indicator */
+.unread-badge {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: var(--red);
+    color: white;
+    border-radius: 10px;
+    padding: 1px 6px;
+    font-size: 10px;
+    font-weight: bold;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+    }
+}
+
+/* 9. Action Buttons (New/Import/Delete) */
+.action-button {
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--gray-300);
+    background: var(--white);
+    transition: all 0.2s;
+}
+
+.action-button:hover { background: var(--gray-50); }
+.action-button.primary { background: var(--gray-900); color: white; border-color: var(--gray-900); }
+.action-button.danger  { background: var(--red); color: white; border-color: var(--red); }
+
+/* 10. Checkbox Mode (For Deleting) */
+.conversation-checkbox {
+    display: none;
+}
+.conversations-list.delete-mode .conversation-checkbox {
+    display: flex;
+    margin-right: 8px;
+}
+
+
+/* ==========================================================================
+   [MODULE: RIGHT_PANEL]
+   Intelligence, Tabs, Document Lists, and CRM Data
+   ========================================================================== */
+
+/* 1. Container & Scroll */
+.right-panel {
+    flex: 3 0 450px; /* Fixed width base */
+    min-width: 400px;
+    max-width: 700px;
+    border-right: none;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    overflow: hidden;
+}
+
+/* 2. Navigation Tabs */
+.right-panel .panel-header {
+    padding: 12px 16px;
+    background: var(--gray-50);
+    border-bottom: 1px solid var(--gray-200);
+    flex-shrink: 0;
+}
+
+.intelligence-tabs {
+    display: flex;
+    gap: 4px;
+    background: var(--gray-200);
+    padding: 3px;
+    border-radius: 8px;
+    margin-top: 8px;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 6px;
+    border: none;
+    background: none;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-600);
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.tab-btn.active {
+    background: var(--white);
+    color: var(--gray-900);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
+
+/* 3. Content Area */
+.intelligence-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    background: var(--white);
+}
+
+/* 4. Data Grids (CRM Info) */
+.info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-bottom: 1px solid var(--gray-100);
+    padding-bottom: 8px;
+}
+
+.info-label {
+    font-size: 11px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    font-size: 13px;
+    color: var(--gray-900);
+    font-weight: 500;
+}
+
+/* 5. Document Lists (Files) */
+.document-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    background: var(--white);
+    transition: border-color 0.2s;
+}
+
+.document-item:hover {
+    border-color: var(--blue);
+}
+
+.document-thumbnail {
+    width: 36px;
+    height: 36px;
+    background: var(--gray-100);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+}
+
+.document-details {
+    flex: 1;
+    overflow: hidden;
+}
+
+.document-name {
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.document-meta {
+    font-size: 11px;
+    color: var(--gray-500);
+}
+
+/* 6. Drag & Drop Zone */
+.drag-drop-zone {
+    border: 2px dashed var(--gray-300);
+    border-radius: 12px;
+    padding: 24px;
+    text-align: center;
+    background: var(--gray-50);
+    margin-bottom: 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.drag-drop-zone:hover, .drag-drop-zone.drag-active {
+    border-color: var(--primary-green);
+    background: var(--light-green);
+}
+
+
+/* ==========================================================================
+   [MODULE: MODALS_FORMS]
+   Overlays, Form Grids, Inputs, and CRM Edit Screens
+   ========================================================================== */
+
+/* 1. Modal Overlay */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Dimmed background */
+    backdrop-filter: blur(2px);       /* Modern blur effect */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Ensure it covers everything */
+}
+
+/* 2. Modal Content Box */
+.modal-content {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    animation: scaleIn 0.2s ease-out;
+}
+
+.comprehensive-modal {
+    max-width: 1200px; /* Wide mode for CRM edit */
+    width: 95vw;
+}
+
+.modal-header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-200);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--gray-50);
+    border-radius: 0 0 12px 12px;
+}
+
+/* 3. Form Layout Grid (The CRM Rows) */
+.form-section {
+    margin-bottom: 24px;
+    border: 1px solid var(--gray-200);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.section-header {
+    background: var(--gray-50);
+    padding: 10px 16px;
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--gray-700);
+    border-bottom: 1px solid var(--gray-200);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+}
+
+.section-content {
+    padding: 16px;
+    background: var(--white);
+}
+
+/* Responsive Grid System */
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.form-row-six {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+/* 4. Inputs & Controls */
+.form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.form-group label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--gray-600);
+}
+
+.form-input, 
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--gray-300);
+    border-radius: 6px;
+    font-size: 13px;
+    transition: border-color 0.15s;
+}
+
+.form-input:focus, 
+.form-select:focus {
+    border-color: var(--blue);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* 5. Modal Animations */
+@keyframes scaleIn {
+    from { transform: scale(0.95); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+    .form-row, .form-row-six {
+        grid-template-columns: 1fr; /* Stack everything on mobile */
+        flex-direction: column;
+    }
+    .modal-content {
+        width: 100%;
+        height: 100%;
+        border-radius: 0;
+        max-height: 100vh;
+    }
+}
+
+/* ==========================================================================
+   [MODULE: MESSAGING / CENTER PANEL]
+   Refactored to match command-center.html structure.
+   Uses absolute positioning for the "iPhone" floating input style.
+   ========================================================================== */
+
+/* 1. The Main Container */
+.center-panel {
+    flex: 3 1 400px;       /* Proportions */
+    min-width: 350px;
+    height: 100%;          /* Full height */
+    position: relative;    /* ANCHOR: Allows children to float inside */
+    display: flex;
+    flex-direction: column;
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    overflow: hidden;      /* Clips content that slides out */
+}
+
+/* 2. The Header (Fixed Top) */
+.center-panel .panel-header {
+    flex: 0 0 auto;        /* Fixed height */
+    height: 60px;
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-50);
+    z-index: 10;           /* Sits above scrolling messages */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* 3. The Scrolling Messages Area */
+/* Matches HTML ID: id="messagesContainer" */
+#messagesContainer {
+    position: absolute;
+    top: 60px;             /* Starts below the header */
+    bottom: 0;             /* Stretches to the bottom */
+    left: 0;
+    right: 0;
+    
+    /* Scroll Behavior */
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    /* Spacing */
+    padding: 16px;
+    padding-bottom: 100px; /* CRITICAL: Space for the floating input at bottom */
+    
+    background: var(--white);
+    z-index: 1;
+}
+
+/* Optional: Hide scrollbar for cleaner look */
+#messagesContainer::-webkit-scrollbar {
+    display: none;
+}
+
+/* 4. The Floating Input Bar */
+/* Matches HTML ID: id="messageInputContainer" */
+#messageInputContainer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    /* Visuals */
+    background: rgba(255, 255, 255, 0.95); /* Semi-transparent */
+    backdrop-filter: blur(5px);            /* Blur effect behind */
+    border-top: 1px solid var(--gray-200);
+    padding: 12px 16px;
+    z-index: 20;                           /* Sits ABOVE messages */
+    
+    display: flex; /* Note: HTML has style="display: none" initially, JS toggles this */
+    gap: 10px;
+    align-items: flex-end;
+}
+
+/* 5. Input Field & Buttons */
+.input-row {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: flex-end;
+}
+
+#messageInput {
+    flex: 1;
+    background: var(--gray-100);
+    border: 1px solid var(--gray-300);
+    border-radius: 20px;
+    padding: 10px 16px;
+    font-size: 14px;
+    font-family: inherit;
+    max-height: 100px;
+    min-height: 40px;
+    resize: none;
+    outline: none;
+}
+
+#messageInput:focus {
+    background: var(--white);
+    border-color: var(--primary-green); /* Uses your var */
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.attachment-icon {
+    background: none;
+    border: none;
+    font-size: 20px;
+    padding-bottom: 10px;
+    cursor: pointer;
+    color: var(--gray-500);
+}
+
+/* 6. Message Bubbles */
+.message {
+    display: flex;
+    width: 100%;
+    margin-bottom: 8px;
+    animation: slideIn 0.2s ease-out;
+}
+
+.message.inbound { justify-content: flex-start; }
+.message.outbound { justify-content: flex-end; }
+
+.message-content {
+    max-width: 70%;
+    padding: 8px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.inbound .message-content {
+    background: var(--gray-100);
+    color: var(--gray-900);
+    border-bottom-left-radius: 4px;
+}
+
+.message.outbound .message-content {
+    background: var(--primary-green);
+    color: var(--white);
+    border-bottom-right-radius: 4px;
+}
+
+.message-time {
+    font-size: 10px;
+    color: var(--gray-400);
+    margin-top: 2px;
+    padding: 0 4px;
+}
+.message.outbound .message-time { text-align: right; }
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   [MODULE: UTILITIES]
+   Spinners, Status Dots, Overlays, and Helpers
+   (Migrated from HTML inline styles)
+   ========================================================================== */
+
+/* 1. Status Dots (Connection Status) */
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    background-color: var(--gray-400); /* Default */
+}
+
+.status-dot.connected {
+    background-color: var(--primary-green);
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.4);
+    animation: pulse-green 2s infinite;
+}
+
+.status-dot.disconnected {
+    background-color: var(--red);
+}
+
+.status-dot.connecting {
+    background-color: var(--orange);
+    animation: blink 1s infinite;
+}
+
+/* 2. Loading Spinners */
+.spinner {
+    border: 3px solid var(--gray-100);
+    border-top: 3px solid var(--blue);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+}
+
+.loading-spinner {
+    /* Alias for spinner if used elsewhere */
+    border: 2px solid var(--gray-200);
+    border-top: 2px solid var(--primary-green);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    animation: spin 1s linear infinite;
+}
+
+/* 3. Processing Overlay (Full Screen Blocker) */
+.processing-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(2px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Topmost layer */
+}
+
+.processing-content {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 32px;
+    text-align: center;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.processing-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--gray-900);
+    margin-top: 16px;
+}
+
+.processing-subtext {
+    font-size: 14px;
+    color: var(--gray-500);
+    margin-top: 8px;
+}
+
+/* 4. Animation Keyframes */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+
+@keyframes blink {
+    50% { opacity: 0.5; }
+}
+
+/* 5. Utility Helpers */
+.text-center { text-align: center; }
+.mt-2 { margin-top: 8px; }
+.mb-2 { margin-bottom: 8px; }
+.hidden { display: none !important; }
